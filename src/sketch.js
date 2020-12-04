@@ -6,6 +6,7 @@ let values = balls.map((item) => item.value);
 let castleLife = 0;
 let selectedBalls = [];
 let selectedBallsWeight = 0;
+let initGame = false;
 
 //Game State
 
@@ -17,11 +18,6 @@ function setup() {
   createCanvas(windowWidth, windowHeight * 0.90);
   generateBalls();
   castleLife = maxKnapsack(balls, 200);
-  let col = color(25, 23, 200, 50);
-  button = createButton('Shoot!');
-  button.position(windowWidth * 0.125, windowHeight * 0.90);
-  button.mousePressed(buttonPressed);
-  button.style('background-color', col);
 }
 
 function buttonPressed() {
@@ -57,12 +53,20 @@ function castleDraw() {
 }
 
 function draw() {
-  background(255, 255, 255);
-  castleDraw();
-  cannonDraw();
-  balls.forEach(ball => {
-    ball.display();
-  })
+  if (initGame) {
+    background(255, 255, 255);
+    castleDraw();
+    cannonDraw();
+    balls.forEach(ball => {
+      ball.display();
+    })
+    let col = color(25, 23, 200, 50);
+    button = createButton('Shoot!');
+    button.position(windowWidth * 0.125, windowHeight * 0.90);
+    button.mousePressed(buttonPressed);
+    button.style('background-color', col);
+  } else {
+  }
 }
 
 function mouseClicked() {
@@ -73,7 +77,7 @@ function mouseClicked() {
         ball.selected = true;
         selectedBallsWeight += ball.weight;
         selectedBalls.push(ball);
-      } else if(ball.selected){
+      } else if (ball.selected) {
         selectedBalls = selectedBalls.filter(
           item => item.value !== ball.value && item.weight !== ball.weight
         );
