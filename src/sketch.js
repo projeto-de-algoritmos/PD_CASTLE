@@ -39,16 +39,16 @@ function cannonDraw() {
   strokeWeight(1);
   stroke(255, 0, 0);
   text("Max Weight: " + weightCap, windowWidth * 0.12, windowHeight * 0.65);
-  image(img, windowWidth * 0.1, windowHeight * 0.65, 150, 150);
+  image(img, windowWidth * 0.1, windowHeight * 0.67, 150, 150);
 }
 
 function castleDraw() {
   stroke(0, 255, 0);
   strokeWeight(12);
-  line(windowWidth * 0.6, windowHeight * 0.2, windowWidth * 0.9, windowHeight * 0.2);
+  line(windowWidth * 0.6, windowHeight * 0.26, windowWidth * 0.83, windowHeight * 0.26);
   fill(0, 0, 0);
   strokeWeight(1);
-  text("Castle HP: " + castleLife, windowWidth * 0.72, 100);
+  text("Castle HP: " + castleLife, windowWidth * 0.69, windowHeight * 0.23);
   image(imgCastle, windowWidth * 0.6, windowHeight * 0.3, 400, 400);
 }
 
