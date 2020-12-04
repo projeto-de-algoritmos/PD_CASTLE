@@ -17,6 +17,15 @@ function setup() {
   createCanvas(windowWidth, windowHeight * 0.90);
   generateBalls();
   castleLife = maxKnapsack(balls, 200);
+  let col = color(25, 23, 200, 50);
+  button = createButton('Shoot!');
+  button.position(windowWidth * 0.125, windowHeight * 0.90);
+  button.mousePressed(buttonPressed);
+  button.style('background-color', col);
+}
+
+function buttonPressed() {
+  console.log('teste');
 }
 
 function preload() {
@@ -46,15 +55,17 @@ function draw() {
 function mouseClicked() {
   balls.forEach(ball => {
     if (dist(ball.x, ball.y, mouseX, mouseY) < 85 / 2) {
-      ball.selected = !ball.selected;
-      if (ball.selected) {
+      if (!ball.selected && (selectedBallsWeight + ball.weight) <= weightCap) {
+        console.log(selectedBallsWeight + ball.weight)
+        ball.selected = true;
         selectedBallsWeight += ball.weight;
-        if (selectedBallsWeight <= weightCap) {
-          selectedBalls.push(ball);
-        }
-      } else {
-        selectedBalls = selectedBalls.filter(item => item.value !== ball.value && item.weight !== ball.weight);
+        selectedBalls.push(ball);
+      } else if(ball.selected){
+        selectedBalls = selectedBalls.filter(
+          item => item.value !== ball.value && item.weight !== ball.weight
+        );
         selectedBallsWeight -= ball.weight;
+        ball.selected = false;
       }
       console.log(selectedBalls);
     }
@@ -71,8 +82,6 @@ function maxKnapsack(items, W) {
   }
   let weights = items.map(item => item.weight);
   let values = items.map(item => item.value);
-  console.log('weights', weights);
-  console.log('values', values);
   for (let i = 0; i < items.length + 1; i++) {
     for (let j = 0; j < W + 1; j++) {
       if (i === 0 || j === 0)
