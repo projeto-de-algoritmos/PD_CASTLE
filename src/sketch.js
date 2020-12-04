@@ -18,6 +18,7 @@ function setup() {
   createCanvas(windowWidth, windowHeight * 0.90);
   generateBalls();
   castleLife = maxKnapsack(balls, 200);
+  button = createButton('Shoot!');
 }
 
 function buttonPressed() {
@@ -38,7 +39,7 @@ function cannonDraw() {
   fill(0, 0, 0);
   strokeWeight(1);
   stroke(255, 0, 0);
-  text("Max Weight: " + weightCap, windowWidth * 0.12, windowHeight * 0.65);
+  text("Free Weight: " + (weightCap - selectedBallsWeight), windowWidth * 0.12, windowHeight * 0.65);
   image(img, windowWidth * 0.1, windowHeight * 0.67, 150, 150);
 }
 
@@ -52,6 +53,15 @@ function castleDraw() {
   image(imgCastle, windowWidth * 0.6, windowHeight * 0.3, 400, 400);
 }
 
+function keyPressed() {
+  if (keyCode === ENTER) {
+    if (!initGame) {
+      initGame = true;
+    }
+  }
+}
+
+
 function draw() {
   if (initGame) {
     background(255, 255, 255);
@@ -60,13 +70,27 @@ function draw() {
     balls.forEach(ball => {
       ball.display();
     })
-    let col = color(25, 23, 200, 50);
-    button = createButton('Shoot!');
+    let col = color(25, 23, 200);
     button.position(windowWidth * 0.125, windowHeight * 0.90);
     button.mousePressed(buttonPressed);
-    button.style('background-color', col);
   } else {
+    renderHomeScreen();
   }
+}
+
+function renderHomeScreen() {
+  background(105, 105, 105);
+  textStyle(BOLD);
+  textSize(80);
+  text('Castle Desctruction', width / 2, height / 3);
+  textSize(width * 0.015);
+  fill(255, 255, 255);
+  textAlign(CENTER, TOP);
+  text('Press Enter to start the game ...', width / 2, height / 2);
+  textSize(24);
+  textAlign(CENTER, CENTER);
+  text('you only have one cannon shot to destroy the enemy castle,\n so respect the weight supported by the cannon. the ammunition\n has different levels of damage so choose the best combination between the ammunition.\n to choose just click on the chosen ammo and finally shoot', width / 3, height / 1.25);
+  textAlign(CENTER, BOTTOM);
 }
 
 function mouseClicked() {
