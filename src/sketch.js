@@ -3,6 +3,9 @@ let balls = [];
 let weightCap = 200
 let weights = balls.map((item) => item.weight);
 let values = balls.map((item) => item.value);
+let castleLife = 0;
+let selectedBalls = [];
+let selectedBallsWeight = 0;
 
 //Game State
 
@@ -13,7 +16,7 @@ let imgCastle;
 function setup() {
   createCanvas(windowWidth, windowHeight * 0.90);
   generateBalls();
-  let a = maxKnapsack(balls, 200);
+  castleLife = maxKnapsack(balls, 200);
 }
 
 function preload() {
@@ -26,23 +29,37 @@ function draw() {
   stroke(0, 255, 0);
   strokeWeight(12);
   line(windowWidth * 0.6, windowHeight * 0.2, windowWidth * 0.9, windowHeight * 0.2);
+  fill(0, 0, 0);
+  strokeWeight(1);
+  text("Castle HP: " + castleLife, windowWidth * 0.72, 100);
   image(imgCastle, windowWidth * 0.6, windowHeight * 0.3, 400, 400);
+  fill(0, 0, 0);
+  strokeWeight(1);
+  stroke(255, 0, 0);
+  text("Max Weight: " + weightCap, windowWidth * 0.12, windowHeight * 0.62);
   image(img, windowWidth * 0.1, windowHeight * 0.65, 150, 150);
   balls.forEach(ball => {
     ball.display();
   })
 }
 
-/* function keyPressed() {
-  if (keyCode === ENTER) {
-    if (instructions) {
-      instructions = false;
+function mouseClicked() {
+  balls.forEach(ball => {
+    if (dist(ball.x, ball.y, mouseX, mouseY) < 85 / 2) {
+      ball.selected = !ball.selected;
+      if (ball.selected) {
+        selectedBallsWeight += ball.weight;
+        if (selectedBallsWeight <= weightCap) {
+          selectedBalls.push(ball);
+        }
+      } else {
+        selectedBalls = selectedBalls.filter(item => item.value !== ball.value && item.weight !== ball.weight);
+        selectedBallsWeight -= ball.weight;
+      }
+      console.log(selectedBalls);
     }
-    if (gameOver || gameFinished) {
-      reset();
-    }
-  }
-} */
+  })
+}
 
 function maxKnapsack(items, W) {
   let cache = [];
@@ -75,10 +92,10 @@ function maxKnapsack(items, W) {
 function generateBalls() {
   for (let i = 0; i < numballs; i++) {
     let value = Math.round(Math.random() * 100);
-    let weight =  Math.round(Math.random() * 100 + 50);
+    let weight = Math.round(Math.random() * 100 + 50);
     let aux = new Ball(
       windowWidth * 0.05,
-      windowHeight * (0.06 + i/8),
+      windowHeight * (0.06 + i / 8),
       weight,
       value
     );
