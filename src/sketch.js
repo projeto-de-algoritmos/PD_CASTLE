@@ -1,4 +1,4 @@
-let numballs = 3;
+let numballs = 6;
 let balls = [];
 let weightCap = 200
 let weights = balls.map((item) => item.weight);
@@ -6,8 +6,10 @@ let values = balls.map((item) => item.value);
 let castleLife = 0;
 let selectedBalls = [];
 let selectedBallsWeight = 0;
+let selectedBallsValues = 0;
 let initGame = false;
-
+let gamedEnded = false;
+let win = false;
 //Game State
 
 
@@ -15,6 +17,13 @@ let img;
 let imgCastle;
 
 function setup() {
+  weight = [];
+  values = [];
+  castleLife = 0;
+  selectedBalls = [];
+  selectedBallsWeight = 0;
+  selectedBallsValues = 0;
+  balls = [];
   createCanvas(windowWidth, windowHeight * 0.90);
   generateBalls();
   castleLife = maxKnapsack(balls, 200);
@@ -22,7 +31,15 @@ function setup() {
 }
 
 function buttonPressed() {
-  alert("FIRE");
+  if (castleLife === selectedBallsValues) {
+    gamedEnded = true;
+    initGame = false;
+    win = true;
+  } else {
+    gamedEnded = true;
+    initGame = false;
+    win = false;
+  }
 }
 
 function preload() {
@@ -39,7 +56,7 @@ function cannonDraw() {
   fill(0, 0, 0);
   strokeWeight(1);
   stroke(255, 0, 0);
-  text("Free Weight: " + (weightCap - selectedBallsWeight), windowWidth * 0.12, windowHeight * 0.65);
+  text("Free Weight: " + (weightCap - selectedBallsWeight), windowWidth * 0.14, windowHeight * 0.65);
   image(img, windowWidth * 0.1, windowHeight * 0.67, 150, 150);
 }
 
@@ -49,15 +66,19 @@ function castleDraw() {
   line(windowWidth * 0.6, windowHeight * 0.26, windowWidth * 0.83, windowHeight * 0.26);
   fill(0, 0, 0);
   strokeWeight(1);
-  text("Castle HP: " + castleLife, windowWidth * 0.69, windowHeight * 0.23);
+  textSize(16)
+  text("Castle HP: " + castleLife, windowWidth * 0.71, windowHeight * 0.23);
   image(imgCastle, windowWidth * 0.6, windowHeight * 0.3, 400, 400);
 }
 
 function keyPressed() {
-  if (keyCode === ENTER) {
+  if (keyCode === ENTER && !gamedEnded) {
     if (!initGame) {
       initGame = true;
     }
+  } else if (keyCode === ENTER && gamedEnded && !initGame) {
+    gamedEnded = false;
+    setup();
   }
 }
 
@@ -70,9 +91,12 @@ function draw() {
     balls.forEach(ball => {
       ball.display();
     })
-    let col = color(25, 23, 200);
     button.position(windowWidth * 0.125, windowHeight * 0.90);
     button.mousePressed(buttonPressed);
+  } else if (gamedEnded && win) {
+    renderEndGameVictory();
+  } else if (gamedEnded && !win) {
+    renderEndGameLose();
   } else {
     renderHomeScreen();
   }
@@ -89,7 +113,37 @@ function renderHomeScreen() {
   text('Press Enter to start the game ...', width / 2, height / 2);
   textSize(24);
   textAlign(CENTER, CENTER);
-  text('you only have one cannon shot to destroy the enemy castle,\n so respect the weight supported by the cannon. the ammunition\n has different levels of damage so choose the best combination between the ammunition.\n to choose just click on the chosen ammo and finally shoot', width / 3, height / 1.25);
+  text('you only have one cannon shot to destroy the enemy castle,\n so respect the weight supported by the cannon. the ammunition\n has different levels of damage so choose the best combination between the ammunition.\n to choose just click on the chosen ammo and finally shoot', width / 2, height / 1.25);
+  textAlign(CENTER, BOTTOM);
+}
+
+function renderEndGameVictory() {
+  background(105, 105, 105);
+  textStyle(BOLD);
+  textSize(80);
+  text('CONGRATULATIONS!!! YOU HAVE MADE IT!', width / 2, height / 3);
+  textSize(width * 0.015);
+  fill(255, 255, 255);
+  textAlign(CENTER, TOP);
+  text('The castle was successful destroyed', width / 2, height / 2);
+  textSize(24);
+  textAlign(CENTER, CENTER);
+  text('Press Enter to play again!', width / 2, height / 1.25);
+  textAlign(CENTER, BOTTOM);
+}
+
+function renderEndGameLose() {
+  background(105, 105, 105);
+  textStyle(BOLD);
+  textSize(80);
+  text('YOU LOSE!', width / 2, height / 3);
+  textSize(width * 0.015);
+  fill(255, 255, 255);
+  textAlign(CENTER, TOP);
+  text('Continue...?', width / 2, height / 2);
+  textSize(24);
+  textAlign(CENTER, CENTER);
+  text('Press Enter to play again', width / 2, height / 1.25);
   textAlign(CENTER, BOTTOM);
 }
 
@@ -97,18 +151,18 @@ function mouseClicked() {
   balls.forEach(ball => {
     if (dist(ball.x, ball.y, mouseX, mouseY) < 85 / 2) {
       if (!ball.selected && (selectedBallsWeight + ball.weight) <= weightCap) {
-        console.log(selectedBallsWeight + ball.weight)
         ball.selected = true;
         selectedBallsWeight += ball.weight;
+        selectedBallsValues += ball.value;
         selectedBalls.push(ball);
       } else if (ball.selected) {
         selectedBalls = selectedBalls.filter(
           item => item.value !== ball.value && item.weight !== ball.weight
         );
         selectedBallsWeight -= ball.weight;
+        selectedBallsValues -= ball.value;
         ball.selected = false;
       }
-      console.log(selectedBalls);
     }
   })
 }
@@ -141,8 +195,8 @@ function maxKnapsack(items, W) {
 
 function generateBalls() {
   for (let i = 0; i < numballs; i++) {
-    let value = Math.round(Math.random() * 100);
-    let weight = Math.round(Math.random() * 100 + 50);
+    let value = Math.round(Math.random() * 70);
+    let weight = Math.round(Math.random() * 80 + 50);
     let aux = new Ball(
       windowWidth * 0.05,
       windowHeight * (0.06 + i / 8),
