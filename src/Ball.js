@@ -54,8 +54,8 @@ class Ball {
       fill(255, 255, 255);
       textSize(9);
       if (this.info) {
-        text('Damage: ' + this.value, width * 0.05, this.y);
-        text('Weight: ' + this.weight, width * 0.05, this.y + 15);
+        text('Damage: ' + this.value * 10, width * 0.05, this.y);
+        text('Weight: ' + this.weight * 10, width * 0.05, this.y + 15);
       }
     } else {
       return;
