@@ -10,8 +10,8 @@ let selectedBallsValues = 0;
 let initGame = false;
 let gamedEnded = false;
 let win = false;
-//Game State
-
+let finalShoot = false;
+let readyToShoot = false;
 
 let img;
 let imgCastle;
@@ -31,15 +31,7 @@ function setup() {
 }
 
 function buttonPressed() {
-  if (castleLife === selectedBallsValues) {
-    gamedEnded = true;
-    initGame = false;
-    win = true;
-  } else {
-    gamedEnded = true;
-    initGame = false;
-    win = false;
-  }
+
 }
 
 function preload() {
@@ -58,6 +50,9 @@ function cannonDraw() {
   stroke(255, 0, 0);
   text("Free Weight: " + (weightCap - selectedBallsWeight), windowWidth * 0.14, windowHeight * 0.65);
   image(img, windowWidth * 0.1, windowHeight * 0.67, 150, 150);
+  if (readyToShoot) {
+    finalShoot.display();
+  }
 }
 
 function castleDraw() {
@@ -69,6 +64,17 @@ function castleDraw() {
   textSize(16)
   text("Castle HP: " + castleLife, windowWidth * 0.71, windowHeight * 0.23);
   image(imgCastle, windowWidth * 0.6, windowHeight * 0.3, 400, 400);
+  if (finalShoot.finished) {
+    if (castleLife === selectedBallsValues) {
+      gamedEnded = true;
+      initGame = false;
+      win = true;
+    } else {
+      gamedEnded = true;
+      initGame = false;
+      win = false;
+    }
+  }
 }
 
 function keyPressed() {
@@ -92,7 +98,7 @@ function draw() {
       ball.display();
     })
     button.position(windowWidth * 0.125, windowHeight * 0.90);
-    button.mousePressed(buttonPressed);
+    button.mousePressed(shoot);
   } else if (gamedEnded && win) {
     renderEndGameVictory();
   } else if (gamedEnded && !win) {
@@ -205,6 +211,22 @@ function generateBalls() {
     );
     balls.push(aux);
   }
+  finalShoot = new Ball(windowWidth * 0.2, windowHeight * 0.67, 200, 200);
+  finalShoot.info = false;
+}
+
+function shoot() {
+  balls.reverse().map(item => {
+    if (item.selected) {
+      item.toCannon();
+    }
+  })
+  setTimeout(() => {
+    readyToShoot = true;
+    setTimeout(() => {
+      finalShoot.fire();
+    }, 1500);
+  }, 1500);
 }
 
 function windowResized() {
