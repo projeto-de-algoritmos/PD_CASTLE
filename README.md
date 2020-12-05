@@ -1,5 +1,5 @@
 
-# DragonMaze
+# CastleDestroy
 
 **Número da Lista**: 5<br>
 **Conteúdo da Disciplina**: Programação Dinâmica<br>
@@ -15,6 +15,10 @@
   - O jogo consiste em destruir o castelo baseado nos pesos e valores de cada munição.<br>
 
 ## Screenshots
+
+![Imagem tutorial 1](./tutorial/Screenshot1.png)
+![Imagem tutorial 2](./tutorial/Screenshot2.png)
+![Imagem tutorial 3](./tutorial/Screenshot3.png)
 
 ## Instalação 
 **Linguagem**: JavaScript<br>
@@ -36,11 +40,6 @@ python -m SimpleHTTPServer
 ```sh
 localhost:8000
 ```
-
-- Link para o video de demonstrativo 
-
-- Caso queira executar o projeto sem realizar o clone, é necessário apenas acessar o link e jogar.
-
 
 ## Uso 
 
